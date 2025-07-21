@@ -32,28 +32,6 @@ Web tabanlı sistem ile masaya servis edilen ürünleri **gerçek zamanlı tespi
 
 ---
 
-## 📁 Proje Yapısı
-
-restoran_otomasyonu/
-├── app.py # Ana Flask uygulaması
-├── config.py # Yapılandırmalar (model yolu, fiyatlar, QR kodlar)
-├── README.md # Bu belge
-│
-├── templates/
-│ └── index.html # Web arayüzü
-│
-├── models/
-│ └── best.pt # YOLOv8 eğitilmiş model
-│
-└── video_input/
-└── test_video.mp4 # Örnek video girişi
-
-yaml
-Copy
-Edit
-
----
-
 ## ⚙️ Kurulum ve Çalıştırma
 
 ### 1. Gereksinimlerin Kurulumu
