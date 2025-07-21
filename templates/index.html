@@ -3,208 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restoran Akıllı Masa Sistemi</title>
+    <title>Restoran Görü Sistemi</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
+        :root {
+            --dark-panel: #2c3e50; --medium-panel: #34495e; --light-text: #ecf0f1;
+            --accent-blue: #3498db; --success-green: #2ecc71; --warning-orange: #e67e22;
+            --info-blue: #3498db;
         }
-
-        .container {
-            display: flex;
-            width: 100%;
-            max-width: 1500px;
-            background: white;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
-            overflow: hidden;
-            height: 80vh;
-        }
-
-        .video-container {
-            flex: 2.5;
-            position: relative;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .panel-container {
-            flex: 1;
-            padding: 25px;
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; background-color: #f0f2f5; }
+        .container { display: flex; width: 100%; height: 100%; }
+        .video-container { flex-grow: 1; display: flex; flex-direction: column; background-color: black; padding: 20px; box-sizing: border-box; }
+        .video-container h1 { color: var(--light-text); text-align: center; margin: 0 0 20px 0; }
+        #video-wrapper { flex-grow: 1; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        #video_feed { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
+        .panel-container { flex-basis: 380px; flex-shrink: 0; padding: 20px; background-color: var(--dark-panel); color: var(--light-text); display: flex; flex-direction: column; }
+        .panel-container h2 { text-align: center; border-bottom: 2px solid var(--accent-blue); padding-bottom: 10px; margin-top: 0; }
         
-        h1, h2 {
-            color: #ffffff;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-            margin-top: 0;
+        #status-panel {
+            padding: 15px; margin-bottom: 20px; border-radius: 6px; font-size: 1.2em;
+            font-weight: bold; text-align: center; transition: all 0.4s ease;
         }
+        #status-panel.waiting { background-color: var(--warning-orange); color: white; }
+        #status-panel.ready { background-color: var(--info-blue); color: white; }
+        #status-panel.new-order { background-color: var(--success-green); color: white; }
 
-        h1 {
-            font-size: 1.5em;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            box-sizing: border-box;
-            z-index: 10;
-            margin: 0;
-        }
-
-        #video_feed {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .status-bar {
-            background-color: #34495e;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .status-bar h3 {
-            margin: 0;
-            font-size: 1.2em;
-            color: #bdc3c7;
-        }
-
-        #waiter-status {
-            font-weight: 700;
-            font-size: 1.4em;
-            color: #e67e22; /* Default: Portakal rengi */
-            transition: color 0.3s;
-        }
-        
-        #waiter-status.identified {
-            color: #2ecc71; /* Garson tanınınca: Yeşil */
-        }
-        
-        #order-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            flex-grow: 1;
-        }
-
-        #order-list li {
-            background-color: #34495e;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 6px;
-            font-size: 1.1em;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 5px solid #3498db;
-        }
-        
-        .item-name { font-weight: 500; }
-        .item-details { color: #bdc3c7; }
-
-        .total-bill-container {
-            border-top: 2px solid #3498db;
-            padding-top: 20px;
-            margin-top: 20px;
-            text-align: right;
-        }
-        
-        .total-bill {
-            font-size: 2.2em;
-            font-weight: bold;
-            color: #2ecc71;
-        }
-        .total-label {
-            font-size: 1.2em;
-            color: #ecf0f1;
-            display: block;
-        }
+        #order-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; overflow-y: auto; }
+        #order-list li { background-color: var(--medium-panel); margin: 0 0 10px 0; padding: 12px 15px; border-radius: 5px; font-size: 1.1em; display: flex; justify-content: space-between; align-items: center; }
+        .item-name { font-weight: bold; } .item-details { color: #bdc3c7; }
+        .total-bill { font-size: 2em; font-weight: bold; text-align: right; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--medium-panel); color: var(--success-green); }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="video-container">
-            <h1>Canlı Görüntü Analizi</h1>
-            <img id="video_feed" src="{{ url_for('video_feed') }}" alt="Video Akışı Yüklenemedi">
-        </div>
+        <!-- Sipariş Paneli -->
         <div class="panel-container">
-            <div class="status-bar">
-                <h3>Garson Durumu</h3>
-                <span id="waiter-status">GARSON BEKLENİYOR...</span>
-            </div>
-            
-            <h2>Masa Hesabı</h2>
-            <ul id="order-list">
-                <!-- Siparişler buraya dinamik olarak eklenecek -->
-                <li>Lütfen garsonun ürünleri masaya bırakmasını bekleyin...</li>
-            </ul>
-
-            <div class="total-bill-container">
-                <span class="total-label">TOPLAM HESAP</span>
-                <div class="total-bill">
-                    <span id="total-bill-amount">0.00</span> TL
-                </div>
+            <h2>Sipariş Paneli</h2>
+            <div id="status-panel" class="waiting">Yükleniyor...</div>
+            <ul id="order-list"></ul>
+            <div class="total-bill">TOPLAM: <span id="total-bill-amount">0.00</span> TL</div>
+        </div>
+        <!-- Video Alanı -->
+        <div class="video-container">
+            <h1>Canlı Masa Analizi</h1>
+            <div id="video-wrapper">
+                 <img id="video_feed" src="{{ url_for('video_feed') }}" alt="Video Akışı">
             </div>
         </div>
     </div>
 
     <script>
-        // Sunucudan anlık verileri çekmek için bir fonksiyon
         async function updateData() {
             try {
                 const response = await fetch('/get_data');
                 const data = await response.json();
 
-                // Garson durumunu güncelle
-                const waiterStatus = document.getElementById('waiter-status');
-                if (data.active_waiter) {
-                    waiterStatus.textContent = data.active_waiter;
-                    waiterStatus.classList.add('identified');
+                // 1. Durum Panelini Güncelle
+                const statusPanel = document.getElementById('status-panel');
+                const statusMessage = data.status_message;
+                statusPanel.textContent = statusMessage;
+                
+                if (statusMessage.includes("BEKLENİYOR")) {
+                    statusPanel.className = 'waiting';
+                } else if (statusMessage.includes("YENİ SİPARİŞ")) {
+                    statusPanel.className = 'new-order';
                 } else {
-                    waiterStatus.textContent = 'GARSON BEKLENİYOR...';
-                    waiterStatus.classList.remove('identified');
+                    statusPanel.className = 'ready';
                 }
-
-                // Sipariş listesini güncelle
+                
+                // 2. Sipariş Listesini Güncelle
                 const orderList = document.getElementById('order-list');
-                orderList.innerHTML = ''; // Listeyi her defasında temizle
-
-                if (Object.keys(data.order_summary).length === 0) {
-                     orderList.innerHTML = '<li>Sipariş bekleniyor...</li>';
-                } else {
-                    for (const item in data.order_summary) {
-                        const count = data.order_summary[item].count;
-                        const price = data.order_summary[item].price;
-                        const listItem = document.createElement('li');
-                        listItem.innerHTML = `
-                            <span class="item-name">${item.toUpperCase()}</span>
-                            <span class="item-details">x${count}    ${price.toFixed(2)} TL</span>
-                        `;
-                        orderList.appendChild(listItem);
-                    }
+                orderList.innerHTML = ''; // Listeyi temizleyip yeniden çizmek en basit ve hatasız yöntemdir.
+                
+                for (const item in data.order_summary) {
+                    const { count, price } = data.order_summary[item];
+                    const single_price = price / count;
+                    const itemNameFormatted = item.replace(/_/g, ' ').toUpperCase();
+                    
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <span class="item-name">${itemNameFormatted}</span>
+                        <span class="item-details">${count} adet x ${single_price.toFixed(2)} TL</span>
+                    `;
+                    orderList.appendChild(listItem);
                 }
 
-                // Toplam hesabı güncelle
+                // 3. Toplam Tutarı Güncelle
                 document.getElementById('total-bill-amount').textContent = data.total_bill.toFixed(2);
 
             } catch (error) {
@@ -212,9 +95,8 @@
             }
         }
 
-        // Sayfa yüklendiğinde ve her 2 saniyede bir verileri güncelle
         document.addEventListener('DOMContentLoaded', () => {
-            setInterval(updateData, 2000); // 2 saniyede bir güncelle
+            setInterval(updateData, 1000); // Saniyede bir güncelle
         });
     </script>
 </body>
