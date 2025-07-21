@@ -1,56 +1,96 @@
-Restoran Akıllı Masa Otomasyonu
-Bu proje, bir restoran masasına servis edilen ürünleri kamera aracılığıyla gerçek zamanlı olarak tespit eden, siparişleri ve hesabı otomatik olarak yöneten bir web tabanlı otomasyon sistemidir. Sistem, YOLOv8 ile nesne tespiti, Pyzbar ile QR kod okuma ve Flask ile web arayüzü sunma teknolojilerini kullanır.
-🚀 Özellikler
-Gerçek Zamanlı Nesne Tespiti: Masaya konulan yiyecek ve içecekleri (makran, mercimek, tavuk_izgara, asure vb.) canlı video akışından tanır.
-Otomatik Sipariş ve Hesap Yönetimi: Tespit edilen her yeni ürünü otomatik olarak sipariş listesine ve hesaba ekler.
-Garson Tanıma: Garsonun taşıdığı bir QR kodu okuyarak sipariş işlemini başlatır.
-Hesap Sıfırlama: Özel bir "Hesap Kapat" QR kodu ile veya manuel olarak masa hesabını sıfırlar.
-Web Arayüzü: Tüm bilgileri (canlı video, garson durumu, sipariş listesi, toplam hesap) anlık olarak gösteren modern ve kullanıcı dostu bir arayüz sunar.
-🛠️ Kullanılan Teknolojiler
-Backend: Python, Flask
-Görüntü İşleme: OpenCV, Ultralytics YOLOv8
-QR Kod Okuma: Pyzbar
-Frontend: HTML5, CSS3, JavaScript (Fetch API)
-📂 Proje Yapısı
-Generated code
+# 🍽️ Restoran Akıllı Masa Otomasyonu
+
+Web tabanlı sistem ile masaya servis edilen ürünleri **gerçek zamanlı tespit** eder, **sipariş** ve **hesap** işlemlerini otomatik yönetir.
+
+---
+
+## 🚀 Ana Özellikler
+
+- **Canlı Nesne Tespiti**  
+  YOLOv8 ile yemek ve içecekleri (makarna, mercimek, tavuk ızgara, aşure vb.) anlık olarak tanır.
+
+- **Otomatik Sipariş & Hesap**  
+  Tespit edilen ürünleri sipariş listesine ekler, toplam hesabı otomatik hesaplar.
+
+- **QR Kodla Garson Tanıma**  
+  Garsonun QR kodu okunduğunda sipariş işlemi başlatılır.
+
+- **Hesap Kapatma**  
+  “HESAP_KAPAT” QR kodu veya manuel işlem ile masa sıfırlanır.
+
+- **Web Arayüzü**  
+  Canlı video, sipariş listesi, garson durumu ve toplam hesap bilgisi kullanıcıya gösterilir.
+
+---
+
+## 🛠️ Kullanılan Teknolojiler
+
+- **Backend:** Python, Flask  
+- **Görüntü İşleme:** OpenCV, YOLOv8 (Ultralytics)  
+- **QR Kod Okuma:** Pyzbar  
+- **Frontend:** HTML5, CSS3, JavaScript (Fetch API)
+
+---
+
+## 📁 Proje Yapısı
+
 restoran_otomasyonu/
-├── app.py             # Ana Flask uygulaması ve mantık
-├── config.py          # Yapılandırma dosyası (dosya yolları, fiyatlar, QR kodlar)
-├── README.md          # Bu dosya
+├── app.py # Ana Flask uygulaması
+├── config.py # Yapılandırmalar (model yolu, fiyatlar, QR kodlar)
+├── README.md # Bu belge
 │
 ├── templates/
-│   └── index.html     # Web arayüzü
+│ └── index.html # Web arayüzü
 │
 ├── models/
-│   └── best.pt        # Eğitilmiş YOLOv8 modeli
+│ └── best.pt # YOLOv8 eğitilmiş model
 │
 └── video_input/
-    └── test_video.mp4 # Analiz edilecek örnek video
-Use code with caution.
-⚙️ Kurulum ve Çalıştırma
-1. Gerekli Kütüphanelerin Kurulumu
-Projeyi çalıştırmadan önce aşağıdaki Python kütüphanelerini kurmanız gerekmektedir. Proje ana dizininde bir terminal açarak komutu çalıştırın:
-Generated bash
+└── test_video.mp4 # Örnek video girişi
+
+yaml
+Copy
+Edit
+
+---
+
+## ⚙️ Kurulum ve Çalıştırma
+
+### 1. Gereksinimlerin Kurulumu
+
+Aşağıdaki komut ile gerekli kütüphaneleri kurun:
+
+```bash
 pip install flask ultralytics opencv-python pyzbar numpy
-Use code with caution.
-Bash
-2. Yapılandırma (config.py)
-Projenin düzgün çalışması için config.py dosyasını kendi ayarlarınıza göre düzenleyin:
-YOLO_MODEL_PATH: Eğittiğiniz .pt model dosyasının yolunu belirtin.
-VIDEO_PATH: Analiz edilecek videonun yolunu belirtin.
-FOOD_PRICES: YOLO modelinizin tanıdığı sınıflarla birebir eşleşen ürün isimlerini ve fiyatlarını girin.
-WAITER_QR_MAPPING: Garsonları ve diğer işlemleri (örn: HESAP_KAPAT) tetikleyecek QR kod metinlerini tanımlayın.
-3. Projeyi Başlatma
-Terminali projenin ana dizininde açın ve aşağıdaki komutu çalıştırın:
-Generated bash
+2. Yapılandırma
+config.py dosyasını düzenleyin:
+
+YOLO_MODEL_PATH: .pt model dosyasının yolu
+
+VIDEO_PATH: Giriş videosunun yolu
+
+FOOD_PRICES: Ürün adları ve fiyatları
+
+WAITER_QR_MAPPING: QR metinleri (garsonlar ve "HESAP_KAPAT")
+
+3. Uygulamayı Başlatma
+Ana dizinde şu komutu çalıştırın:
+
+bash
+Copy
+Edit
 python app.py
-Use code with caution.
-Bash
-Sunucu başladıktan sonra web tarayıcınızdan aşağıdaki adreslere erişebilirsiniz:
-Ana Arayüz: http://127.0.0.1:5001
-Ağdaki Diğer Cihazlardan Erişim: http://<bilgisayarınızın_yerel_ip_adresi>:5001
-🔮 Gelecek Geliştirmeler
-Veritabanı Entegrasyonu (SQLite/PostgreSQL): Siparişleri kalıcı olarak saklamak.
-Çoklu Masa Desteği: Her masayı ayrı bir QR kod ile tanımlayarak birden fazla masayı aynı anda yönetmek.
-Gelişmiş Raporlama: Belirli tarih aralıkları için satış raporları oluşturma.
-Kullanıcı Doğrulama: Garsonların sisteme bir şifre ile giriş yapması.
+Tarayıcıdan erişim adresleri:
+
+Yerel: http://127.0.0.1:5001
+
+Ağ üzeri: http://<IP_ADRESİNİZ>:5001
+
+🔮 Gelecekteki Geliştirmeler
+Veritabanı Desteği (SQLite/PostgreSQL)
+
+Çoklu Masa Yönetimi
+
+Satış ve Sipariş Raporları
+
+Garson Girişi / Şifre Doğrulama
