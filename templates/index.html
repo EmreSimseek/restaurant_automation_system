@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restoran Akıllı Masa Sistemi</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1500px;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            height: 80vh;
+        }
+
+        .video-container {
+            flex: 2.5;
+            position: relative;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-container {
+            flex: 1;
+            padding: 25px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        h1, h2 {
+            color: #ffffff;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 10;
+            margin: 0;
+        }
+
+        #video_feed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .status-bar {
+            background-color: #34495e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .status-bar h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #bdc3c7;
+        }
+
+        #waiter-status {
+            font-weight: 700;
+            font-size: 1.4em;
+            color: #e67e22; /* Default: Portakal rengi */
+            transition: color 0.3s;
+        }
+        
+        #waiter-status.identified {
+            color: #2ecc71; /* Garson tanınınca: Yeşil */
+        }
+        
+        #order-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        #order-list li {
+            background-color: #34495e;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid #3498db;
+        }
+        
+        .item-name { font-weight: 500; }
+        .item-details { color: #bdc3c7; }
+
+        .total-bill-container {
+            border-top: 2px solid #3498db;
+            padding-top: 20px;
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        .total-bill {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #2ecc71;
+        }
+        .total-label {
+            font-size: 1.2em;
+            color: #ecf0f1;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="video-container">
+            <h1>Canlı Görüntü Analizi</h1>
+            <img id="video_feed" src="{{ url_for('video_feed') }}" alt="Video Akışı Yüklenemedi">
+        </div>
+        <div class="panel-container">
+            <div class="status-bar">
+                <h3>Garson Durumu</h3>
+                <span id="waiter-status">GARSON BEKLENİYOR...</span>
+            </div>
+            
+            <h2>Masa Hesabı</h2>
+            <ul id="order-list">
+                <!-- Siparişler buraya dinamik olarak eklenecek -->
+                <li>Lütfen garsonun ürünleri masaya bırakmasını bekleyin...</li>
+            </ul>
+
+            <div class="total-bill-container">
+                <span class="total-label">TOPLAM HESAP</span>
+                <div class="total-bill">
+                    <span id="total-bill-amount">0.00</span> TL
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sunucudan anlık verileri çekmek için bir fonksiyon
+        async function updateData() {
+            try {
+                const response = await fetch('/get_data');
+                const data = await response.json();
+
+                // Garson durumunu güncelle
+                const waiterStatus = document.getElementById('waiter-status');
+                if (data.active_waiter) {
+                    waiterStatus.textContent = data.active_waiter;
+                    waiterStatus.classList.add('identified');
+                } else {
+                    waiterStatus.textContent = 'GARSON BEKLENİYOR...';
+                    waiterStatus.classList.remove('identified');
+                }
+
+                // Sipariş listesini güncelle
+                const orderList = document.getElementById('order-list');
+                orderList.innerHTML = ''; // Listeyi her defasında temizle
+
+                if (Object.keys(data.order_summary).length === 0) {
+                     orderList.innerHTML = '<li>Sipariş bekleniyor...</li>';
+                } else {
+                    for (const item in data.order_summary) {
+                        const count = data.order_summary[item].count;
+                        const price = data.order_summary[item].price;
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `
+                            <span class="item-name">${item.toUpperCase()}</span>
+                            <span class="item-details">x${count}    ${price.toFixed(2)} TL</span>
+                        `;
+                        orderList.appendChild(listItem);
+                    }
+                }
+
+                // Toplam hesabı güncelle
+                document.getElementById('total-bill-amount').textContent = data.total_bill.toFixed(2);
+
+            } catch (error) {
+                console.error('Veri güncellenirken hata oluştu:', error);
+            }
+        }
+
+        // Sayfa yüklendiğinde ve her 2 saniyede bir verileri güncelle
+        document.addEventListener('DOMContentLoaded', () => {
+            setInterval(updateData, 2000); // 2 saniyede bir güncelle
+        });
+    </script>
+</body>
+</html>

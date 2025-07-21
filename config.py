@@ -1,43 +1,35 @@
 # config.py
-import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-YOLO_MODEL_PATH = os.path.join(BASE_DIR, "models", "best.pt")
+# --- Dosya Yolları ---
+# YOLO modelinizin bulunduğu yol. 'models' klasörü içinde olduğunu varsayıyoruz.
+# Kendi .pt dosyanızın adını buraya yazın (Örn: 'yolov8n.pt', 'best.pt' vb.).
+YOLO_MODEL_PATH = 'models/best.pt' # Kendi model dosyanızın adını yazın
 
-class Config:
-    # --- Dosya ve Model Yolları ---
-    VIDEO_PATH = "video_input/test_video1.mp4"
-    YOLO_MODEL_PATH = "models/best.pt"
-    DATABASE_PATH = "restoran_veritabani.db" # Veritabanı dosyasının adı ve yolu
+# Analiz edilecek videonun yolu. 'video_input' klasöründe olduğunu varsayıyoruz.
+VIDEO_PATH = 'video_input/test_video.mp4' # Kendi video dosyanızın adını yazın
 
-    # --- Ürün ve Fiyat Bilgileri ---
-    FOOD_PRICES = {
-        'corba': 40.0,
-        'tavuk_izgara': 150.0,
-        'makarna': 50.0,
-        'asure': 60.0,
-        
-    }
 
-    # --- QR Kod Tanımlamaları ---
-    WAITER_QR_MAPPING = {
-        "garson_ali_qr_id_123": "Garson Ali",
-        "garson_veli_qr_id_456": "Garson Veli"
-    }
-    CUSTOMER_ARRIVED_QR = "musteri_geldi"
-    RESET_TABLE_QR = "hesap_kapat"
+# --- Uygulama Mantığı Ayarları ---
 
-    # --- Garson Performans Ayarları ---
-    WAITER_RESPONSE_TIMEOUT_SECONDS = 10
+# Ürün Fiyatları
+# ÖNEMLİ: Buradaki anahtar isimler, YOLOv8 modelinizin tanıdığı sınıf
+# isimleriyle (labels) BİREBİR AYNI olmalıdır.
+# Modeliniz "tavuk_izgara" olarak tanıyorsa, buraya da "tavuk_izgara" yazmalısınız.
+# Büyük/küçük harf ve alt çizgi gibi karakterler önemlidir.
+FOOD_PRICES = {
+    "makran": 120.00,       # Model sınıfı: "makran"
+    "mercimek": 85.50,      # Model sınıfı: "mercimek"
+    "tavuk_izgara": 280.00, # Model sınıfı: "tavuk_izgara"
+    "asure": 95.00         # Model sınıfı: "asure"
+   
+}
 
-    # --- Görüntü ve Panel Ayarları ---
-    WINDOW_NAME = "Restoran Yönetim Sistemi"
-    PANEL_START_X = 880
-    
-    # Renkler (BGR formatında)
-    COLOR_WHITE = (255, 255, 255)
-    COLOR_BLACK = (0, 0, 0)
-    COLOR_GREEN = (0, 255, 0)
-    COLOR_BLUE = (255, 150, 0)
-    COLOR_YELLOW = (0, 255, 255)
-    COLOR_RED = (0, 0, 255)
+# Garson QR Kod Eşleştirmesi
+# ÖNEMLİ: Buradaki anahtar, QR kodun içinde yazan metindir.
+# Değer ise arayüzde görünecek garson ismidir.
+WAITER_QR_MAPPING = {
+    "WAITER_ID_001": "Ahmet Yılmaz",
+    "WAITER_ID_002": "Zeynep Kaya",
+    "QR_GARSON_AYSE": "Ayşe Demir", # Örnek: QR kod içinde "QR_GARSON_AYSE" yazıyor.
+    "HESAP_KAPAT_MASA1": "HESAP_KAPAT" # Hesap kapatma için özel bir kod
+}
