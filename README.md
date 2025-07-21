@@ -1,6 +1,5 @@
-# Restoran Akıllı Masa Otomasyonu
+Restoran Akıllı Masa Otomasyonu
 Bu proje, bir restoran masasına servis edilen ürünleri kamera aracılığıyla gerçek zamanlı olarak tespit eden, siparişleri ve hesabı otomatik olarak yöneten bir web tabanlı otomasyon sistemidir. Sistem, YOLOv8 ile nesne tespiti, Pyzbar ile QR kod okuma ve Flask ile web arayüzü sunma teknolojilerini kullanır.
-<!-- Buraya kendi arayüzünüzün bir ekran görüntüsünü ekleyebilirsiniz. -->
 🚀 Özellikler
 Gerçek Zamanlı Nesne Tespiti: Masaya konulan yiyecek ve içecekleri (makran, mercimek, tavuk_izgara, asure vb.) canlı video akışından tanır.
 Otomatik Sipariş ve Hesap Yönetimi: Tespit edilen her yeni ürünü otomatik olarak sipariş listesine ve hesaba ekler.
@@ -11,7 +10,7 @@ Web Arayüzü: Tüm bilgileri (canlı video, garson durumu, sipariş listesi, to
 Backend: Python, Flask
 Görüntü İşleme: OpenCV, Ultralytics YOLOv8
 QR Kod Okuma: Pyzbar
-Frontend: HTML5, CSS3, JavaScript
+Frontend: HTML5, CSS3, JavaScript (Fetch API)
 📂 Proje Yapısı
 Generated code
 restoran_otomasyonu/
@@ -30,7 +29,7 @@ restoran_otomasyonu/
 Use code with caution.
 ⚙️ Kurulum ve Çalıştırma
 1. Gerekli Kütüphanelerin Kurulumu
-Projeyi çalıştırmadan önce aşağıdaki Python kütüphanelerini kurmanız gerekmektedir.
+Projeyi çalıştırmadan önce aşağıdaki Python kütüphanelerini kurmanız gerekmektedir. Proje ana dizininde bir terminal açarak komutu çalıştırın:
 Generated bash
 pip install flask ultralytics opencv-python pyzbar numpy
 Use code with caution.
@@ -39,7 +38,7 @@ Bash
 Projenin düzgün çalışması için config.py dosyasını kendi ayarlarınıza göre düzenleyin:
 YOLO_MODEL_PATH: Eğittiğiniz .pt model dosyasının yolunu belirtin.
 VIDEO_PATH: Analiz edilecek videonun yolunu belirtin.
-FOOD_PRICES: YOLO modelinizin tanıdığı sınıflarla eşleşen ürün isimlerini ve fiyatlarını girin.
+FOOD_PRICES: YOLO modelinizin tanıdığı sınıflarla birebir eşleşen ürün isimlerini ve fiyatlarını girin.
 WAITER_QR_MAPPING: Garsonları ve diğer işlemleri (örn: HESAP_KAPAT) tetikleyecek QR kod metinlerini tanımlayın.
 3. Projeyi Başlatma
 Terminali projenin ana dizininde açın ve aşağıdaki komutu çalıştırın:
