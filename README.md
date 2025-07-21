@@ -40,6 +40,7 @@ Aşağıdaki komut ile gerekli kütüphaneleri kurun:
 
 ```bash
 pip install flask ultralytics opencv-python pyzbar numpy
+```
 2. Yapılandırma
 config.py dosyasını düzenleyin:
 
@@ -54,10 +55,11 @@ WAITER_QR_MAPPING: QR metinleri (garsonlar ve "HESAP_KAPAT")
 3. Uygulamayı Başlatma
 Ana dizinde şu komutu çalıştırın:
 
-bash
-Copy
-Edit
+
+```bash
 python app.py
+```
+
 Tarayıcıdan erişim adresleri:
 
 Yerel: http://127.0.0.1:5001
